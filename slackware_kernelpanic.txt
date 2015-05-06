@@ -1,0 +1,58 @@
+Original: http://www.m0rd0r.eu/?p=444
+
+How to reboot Slackware gracefully after Kernel panic
+
+First of all.
+
+It happens.
+
+Don't panic.
+
+When the Kernel sees an error that can't be avoided with his casual means, Kernel panics.
+
+This can be seen as an error message in console and with blinking "Caps lock" and "Scroll lock" indicators on your keyboard. Even if something happened, you are in X.org and you can't see the console Panic message but see the blinking LED indicators - Kernel has panicked. You don't have access to your system anymore.
+
+Again. Don't panic. This error is sometimes seen as often as BSOD in Windows vintage '98.
+
+Most of the present day editors will auto-save your work often, so you probably have a work copy of your document from 5 minutes ago. This is not a reason to panic. The only reason to be a bit wary is, the hard drive needs to be synchronized with the cache. To execute the command "sync" with panicked Kernel is actually quite possible (see below).
+
+The system invokes Panic when there is unrecoverable error. It's locked out, so there is no future harm, data loss or security breach. It's not necessarily something bad. You only need to restart and have a look what actually broke.
+
+There are few things you need to do for graceful restart.
+
+    Get back control of your system (keyboard)
+    Synchronize the cache with the disk.
+    Issue a clean sigTerm and sigKill on all processes.
+    Reboot, so you can have a look at logs and what the hell broke.
+
+There are magic key strokes, that can do all of this and they are invoked by holding "Alt + SysRq" and pressing some of the buttons of the character keyboard.
+
+    Alt + SysRq + R will try to Retake back the keyboard,
+    Alt + SysRq + E will try to gracefully tErminate all processes so they flush and clean,
+    Alt + SysRq + I will send signal kIll to all processes,
+    Alt + SysRq + S will Sync,
+    Alt + SysRq + U will Unmount and
+    Alt + SysRq + B will reBoot.
+
+If you have a look at the letters REISUB and read backwards, you will get BUSIER. So just remember BUSIER for next time the system goes BUSY with Kernel Panic :D
+
+There is longer way to remember it, but I never liked it. It's "Reboot Even If System is sUper Broken". In my opinion BUSIER is much easy to remember. Just remember to apply it backwards or you will simply just reboot with Alt + SysRq + B.
+
+So, now we can have a look, what happened to our Kernel that led to panic. Have a look at /var/log/messages and search for the last restart logged. (less uses the slash-sign for searching. Just press "/" and write "restart". Then with "/" and "Enter" you issue find-next, until no more are found)
+
+bash-4.1# cd /var/log/
+bash-4.1# cat messages | less
+...
+May 30 12:04:44 stoill -- MARK --
+May 30 12:23:57 stoill kernel: [11970.623138] Bluetooth: Core ver 2.15
+May 30 12:23:57 stoill kernel: [11970.623189] NET: Registered protocol family 31
+May 30 12:23:57 stoill kernel: [11970.623193] Bluetooth: HCI device and connection manager initialized
+May 30 12:23:57 stoill kernel: [11970.623198] Bluetooth: HCI socket layer initialized
+May 30 12:31:45 stoill syslogd 1.5.0: restart.
+...
+
+Something obviously gone bad with the Bluetooth USB I inserted in the machine. Problem found, but I will not try to bore you to death with details.
+
+Anyway. If you try to execute those Keystrokes without panicked Kernel (REISUB while holding Alr+SysRq), you will make graceful sync + reboot on your machine. If you do only the "RE" part while in X, you will close everything and make it to Login screen really fast. And if you do Alt+SysRq+S, you will sync all unsaved cache to HDD. Good to know.
+
+If yow want to learn all possible Alt + SysRq key strokes and what they do, refer to the Kernel archives here, and happy hacking ;)

@@ -1,0 +1,23 @@
+Setup: /etc/slackpkg/mirrors
+
+$ slackpkg update
+
+# slackpkg install-new
+
+$ slackpkg upgrade-all
+
+$ slackpkg clean-system
+
+$ slackpkg update
+
+# slackpkg upgrade-all
+
+$ mkinitrd -c -k <kernel_version> -m usbhid:hid_generic:ext4:ehci-pci -f ext4 -r <root_partition> -L -C <crypt_partition>
+
+# Remember to enable "compress" option at /etc/lilo.conf
+$ lilo
+
+# If a single user boot is necessary, check if some system directories are mounted:
+$ mount -o bind /dev /mnt/dev
+$ mount -o bind /proc /mnt/proc
+$ mount -o bind /sys /mnt/sys
